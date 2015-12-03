@@ -5,19 +5,16 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Random;
+
 
 public class Server implements Hello {
 	private static Hello stub;
     public Server() {}
+    private tictactoe my_game = new tictactoe("Hello ");
 
     public String sayHello(int num ) {
-        return "Hello, world!"+ " "+get_random(9, 0);
-    }
-    
-    private int get_random(int max, int min){
-        int randomNum = min+ (int) (Math.random() * ( max - min ));
-        return randomNum;
+    	
+        return my_game.getString();
     }
     
     public String disconnect( ) {
@@ -48,9 +45,26 @@ public class Server implements Hello {
         }
     	return response;
     }
+    /*
+    static void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
+        System.out.printf("Name: %s\n", netint.getName());
+        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+        	if(Inet4Address.class == inetAddress.getClass() )
+            	System.out.printf("InetAddress: %s\n", inetAddress.getHostAddress());
+        }
+        System.out.printf("\n");
+     }*/
 
     public static void main(String args[]) {
-
+    	/*try {
+    		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+            for (NetworkInterface netint : Collections.list(nets))
+                displayInterfaceInformation(netint);	
+    	}catch (Exception ex) {
+            System.err.println("Server exception: " + ex.toString());
+            ex.printStackTrace();
+        }*/
         try {
             Server obj = new Server();
             stub = (Hello) UnicastRemoteObject.exportObject(obj, 0);
@@ -58,11 +72,11 @@ public class Server implements Hello {
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
             registry.bind("Hello", stub);
-
+            
             System.err.println("Server ready");
-        } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
-            e.printStackTrace();
+        } catch (Exception ex) {
+            System.err.println("Server exception: " + ex.toString());
+            ex.printStackTrace();
         }
     }
 }
