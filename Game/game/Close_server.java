@@ -17,15 +17,20 @@ public class Close_server {
             Hello stub = (Hello) registry.lookup("Hello");
         	try{
         		if(stub.disconnect().equals("Server closed")){
-        			System.out.println("Server closed, closing client");
+        			System.out.println("Server closed!");
         		}
         	}catch (Exception e) {
         		System.err.println("Client exception: " + e.toString());
                 e.printStackTrace();
         	}
         } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
+        	if(e.getClass() == java.rmi.NotBoundException.class)
+        		System.err.println("Cannot connect to server");
+        	else
+        	{	
+        		System.err.println("Client exception: " + e.getClass());
+        		e.printStackTrace();
+        	}
         }
     }
 }

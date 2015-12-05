@@ -1,8 +1,8 @@
 package game;
 
-public class tictactoe {
+public class Game {
 	private String my_string;
-	public tictactoe(String str) {
+	public Game(String str) {
 		this.my_string = str;
 	}
 	

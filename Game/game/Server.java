@@ -10,7 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class Server implements Hello {
 	private static Hello stub;
     public Server() {}
-    private tictactoe my_game = new tictactoe("Hello ");
+    private Game my_game = new Game("Hello ");
 
     public String sayHello(int num ) {
     	
@@ -18,7 +18,6 @@ public class Server implements Hello {
     }
     
     public String disconnect( ) {
-    	int succesful = 0;
     	String response = null;
     	try{
         	Registry registry = LocateRegistry.getRegistry();
@@ -40,7 +39,6 @@ public class Server implements Hello {
     	catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
-            succesful = 1;
             response = "Failed to close server";
         }
     	return response;
