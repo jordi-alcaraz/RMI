@@ -1,10 +1,13 @@
 
-package game;
+package game.server;
+
+import game.client.Hello;
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 
 public class Server implements Hello {
@@ -16,6 +19,14 @@ public class Server implements Hello {
     	
         return my_game.getString();
     }
+    
+    public ArrayList<Integer> myNumbers()    {
+	    ArrayList<Integer> numbers = new ArrayList<Integer>();
+	    numbers.add(5);
+	    numbers.add(11);
+	    numbers.add(3);
+	    return(numbers);
+	}
     
     public String disconnect( ) {
     	String response = null;

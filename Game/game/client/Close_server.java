@@ -1,4 +1,4 @@
-package game;
+package game.client;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

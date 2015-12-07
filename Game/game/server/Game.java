@@ -1,4 +1,4 @@
-package game;
+package game.server;
 
 public class Game {
 	private String my_string;
