@@ -3,20 +3,31 @@ package game.server;
 
 import game.client.Hello;
 
+
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.RemoteServer;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Server implements Hello {
 	private static Hello stub;
     public Server() {}
     private Game my_game = new Game("Hello ");
+    private HashMap<String,Game> current_games = new HashMap<String,Game>();
 
     public String sayHello(int num ) {
-    	
+    	try {
+			System.out.println("Conection received from  "+RemoteServer.getClientHost());
+		} catch (ServerNotActiveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return my_game.getString();
     }
     
@@ -54,34 +65,22 @@ public class Server implements Hello {
         }
     	return response;
     }
-    /*
-    static void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
-        System.out.printf("Name: %s\n", netint.getName());
-        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
-        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-        	if(Inet4Address.class == inetAddress.getClass() )
-            	System.out.printf("InetAddress: %s\n", inetAddress.getHostAddress());
-        }
-        System.out.printf("\n");
-     }*/
+    
+
 
     public static void main(String args[]) {
-    	/*try {
-    		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-            for (NetworkInterface netint : Collections.list(nets))
-                displayInterfaceInformation(netint);	
-    	}catch (Exception ex) {
-            System.err.println("Server exception: " + ex.toString());
-            ex.printStackTrace();
-        }*/
+
         try {
+        	if(System.getProperty("java.rmi.server.hostname")==null)
+        	{
+        		Init_ip my_ip = new Init_ip();
+        		System.setProperty("java.rmi.server.hostname", my_ip.getIP());
+        	}
             Server obj = new Server();
             stub = (Hello) UnicastRemoteObject.exportObject(obj, 0);
-
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Hello", stub);
-            
+            registry.bind("Hello", stub);   
             System.err.println("Server ready");
         } catch (Exception ex) {
             System.err.println("Server exception: " + ex.toString());
