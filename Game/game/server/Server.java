@@ -18,26 +18,40 @@ import java.util.HashMap;
 public class Server implements Hello {
 	private static Hello stub;
     public Server() {}
-    private Game my_game = new Game("Hello ");
     private HashMap<String,Game> current_games = new HashMap<String,Game>();
 
-    public String sayHello(int num ) {
+    
+    
+    public boolean connect(){
+    	String name_client = "";
     	try {
-			System.out.println("Conection received from  "+RemoteServer.getClientHost());
-		} catch (ServerNotActiveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return my_game.getString();
+			name_client = RemoteServer.getClientHost();
+			if(!current_games.containsKey(name_client))
+	    	{
+	    		Game my_game = new Game();
+	    		current_games.put(name_client, my_game);
+	    		
+	    	} 
+	    	return true;
+		} catch (ServerNotActiveException e1) {
+			e1.printStackTrace();
+			return false;
+		} 
     }
     
-    public ArrayList<Integer> myNumbers()    {
-	    ArrayList<Integer> numbers = new ArrayList<Integer>();
-	    numbers.add(5);
-	    numbers.add(11);
-	    numbers.add(3);
-	    return(numbers);
-	}
+    public boolean reset(){
+    	String name_client = "";
+    	try {
+			name_client = RemoteServer.getClientHost();
+	    	Game my_game = new Game();
+	    	current_games.put(name_client, my_game);
+	    	return true;
+		} catch (ServerNotActiveException e1) {
+			e1.printStackTrace();
+			return false;
+		} 
+    }
+    
     
     public String disconnect( ) {
     	String response = null;

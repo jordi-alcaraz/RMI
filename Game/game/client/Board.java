@@ -1,4 +1,4 @@
-package game.server;
+package game.client;
 
 public class Board {
 	private int my_board[][];

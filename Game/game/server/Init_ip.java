@@ -13,9 +13,7 @@ import java.util.HashMap;
 
 public class Init_ip {
 	private HashMap<String,String> ip_map = new HashMap<String,String>();
-	public Init_ip() {
-		// TODO Auto-generated constructor stub
-	}
+	public Init_ip() {}
 	
     private void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
         System.out.printf("Interface: %s  ", netint.getName());
