@@ -62,7 +62,11 @@ public class Game {
 		}
 		return move;
 	}
-	public static void main(String [] args) throws NumberFormatException, IOException
+	
+	public void show_board(){
+		my_Board.printBoard();
+	}
+	/*public static void main(String [] args) throws NumberFormatException, IOException
 	{
 		boolean no_end = true;
 		int x, y;
@@ -92,5 +96,5 @@ public class Game {
 				
 			}	
 		}
-	}
+	}*/
 }

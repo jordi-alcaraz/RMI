@@ -26,6 +26,7 @@ public class Board {
 			}
 			System.out.print("\n");
 		}
+		System.out.print("\n");
 	}
 	
 	public int getElement(int col, int row){

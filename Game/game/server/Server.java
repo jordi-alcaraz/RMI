@@ -20,7 +20,20 @@ public class Server implements Hello {
     public Server() {}
     private HashMap<String,Game> current_games = new HashMap<String,Game>();
 
+    public boolean winner(int row, int col, int player) throws ServerNotActiveException{
+    	Game this_game = current_games.get(RemoteServer.getClientHost());
+    	boolean win = this_game.check_winner(row, col, player);
+    	this_game.show_board();
+    	return win;
+    }
     
+    public int server_move() throws ServerNotActiveException{
+    	return current_games.get(RemoteServer.getClientHost()).new_move();
+    }
+    
+    public boolean client_move(int row, int col, int player) throws ServerNotActiveException{
+    	return current_games.get(RemoteServer.getClientHost()).check_move(row, col, player);
+    }
     
     public boolean connect(){
     	String name_client = "";

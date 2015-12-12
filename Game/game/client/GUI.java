@@ -3,12 +3,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
+import java.rmi.server.ServerNotActiveException;
 public class GUI extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	JPanel panel;
 	JButton[] button;
-	int count = 0;
-	int sign = 0;
+	int player = 1;
 	int[][] Board = new int[3][3];
 	JFrame frame = new JFrame("TicTacToe");
 	
@@ -55,7 +55,7 @@ public class GUI extends JFrame implements ActionListener{
 	    frame.setResizable(false);
 	}
 	public void actionPerformed(ActionEvent e){
-		count++;
+		int x=0, y=0;
 		if(start == e.getSource() ){
 			System.out.println("Start");
 			String response="";
@@ -65,76 +65,50 @@ public class GUI extends JFrame implements ActionListener{
 		}
 		else if(reset == e.getSource()){
 			System.out.println("Reset");
-			try {
-				if(stub.reset()){
-					reset_game();
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "Error while reseting");
-				}
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
+			reset_game();
 		}
 		else{
 			for(int i =0; i <3; i++){
 				for(int j =0; j <3; j++){
 					if(buttons[i][j] == e.getSource()){
-						if(sign%2 == 0){
-							buttons[i][j].setText("X");	
-							if(checkWinner(sign%2, i, j))
-							{
-								show_winner(sign%2);
-								reset_game();
-							}
-						}
-						else{
-							buttons[i][j].setText("O");
-							if(checkWinner(sign%2, i, j))
-							{
-								show_winner(sign%2);
-								reset_game();
-							}
-						}
-						Board[i/3][i%3] = sign%2;
-						buttons[i][j].setEnabled(false);
+						y= i;
+						x= j;
 					}			
 				}		
 			}
-			sign++;
-			if(count >= 9){
-				JOptionPane.showMessageDialog(null, "Cat's Game!");
-				reset_game();
+			try {
+				stub.client_move(y, x, 1);
+				buttons[y][x].setText("X");
+				buttons[y][x].setEnabled(false);
+				if(stub.winner(y, x, 1))
+				{
+					show_winner(1);
+					reset_game();
+				}
+				int move = stub.server_move();
+				x= move/10;
+				y= (move-(x*10))%3;
+				System.out.println(move + " "+x +" "+y);
+				buttons[y][x].setText("O");
+				buttons[y][x].setEnabled(false);
+				if(stub.winner(y, x, 2))
+				{
+					show_winner(2);
+					reset_game();
+				}
+			} catch (RemoteException | ServerNotActiveException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-			move_IA(sign%2);
-			sign++;
-			count++;
 		}
 	}
 	public void show_winner(int player){
-		
-	}
-	
-	public void move_IA(int player){
-		int i, j;
-		//calculate i, j, check the move doesn't exist
-		i=0;
-		j=0;
-		
-		
-		
-		if(checkWinner(player, i, j))
-		{
-			show_winner(player);
-			reset_game();
-		}
-	}
-	
-	public boolean checkWinner(int player, int i, int j){	
-		
-		return false;
+		String wins="";
+		if(player == 1)
+			wins = "X";
+		else
+			wins = "O";
+		JOptionPane.showMessageDialog(null, wins+" Wins");
 	}
 	
 	public void reset_game(){
@@ -144,7 +118,11 @@ public class GUI extends JFrame implements ActionListener{
 				buttons[i][j].setEnabled(true);
 			}
 		}
-		count = 0;
-		sign = 0;
+		try {
+			stub.reset();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
