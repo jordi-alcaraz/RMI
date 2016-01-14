@@ -1,7 +1,10 @@
 package game.client;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.ServerNotActiveException;
 public class GUI extends JFrame implements ActionListener{
@@ -16,7 +19,11 @@ public class GUI extends JFrame implements ActionListener{
 	JButton start = new JButton("Start");              //Create start/reset buttons for game
 	JButton reset = new JButton("Reset");
 	Hello stub;
-	public GUI(Hello stub_in){
+	URL iconX_URL = GUI.class.getResource("X-icon.png");
+	ImageIcon iconX ;
+	URL iconO_URL = GUI.class.getResource("O-icon.png");
+	ImageIcon iconO ;
+	public GUI(Hello stub_in) throws IOException{
 		//super();
 		stub = stub_in;
 	    JPanel mainPanel = new JPanel(new BorderLayout());         //create main panel container to put layer others on top
@@ -41,7 +48,6 @@ public class GUI extends JFrame implements ActionListener{
 		     buttons[i][j] = new JButton();                //Instantiating buttons 
 			 buttons[i][j].setText("");
 			 buttons[i][j].setVisible(true);
-			
 			 game.add(buttons[i][j]); 
 			 buttons[i][j].addActionListener(this);        //Adding response event to buttons
 		    }
@@ -53,13 +59,38 @@ public class GUI extends JFrame implements ActionListener{
 	    frame.setDefaultCloseOperation(EXIT_ON_CLOSE);        //Setting dimension of Jframe and setting parameters
 	    frame.setVisible(true);
 	    frame.setResizable(false);
+	    int width = buttons[0][0].getSize().width;
+	    int height = buttons[0][0].getSize().height;
+	    //Resize icon X
+	    Image imageX = ImageIO.read(iconX_URL);
+	    imageX = imageX.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+		iconX = new javax.swing.ImageIcon(imageX);
+
+	    //Resize icon X		
+		Image imageO = ImageIO.read(iconO_URL);
+	    imageO = imageO.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+		iconO = new javax.swing.ImageIcon(imageO);
 	}
 	public void actionPerformed(ActionEvent e){
 		int x=0, y=0;
 		if(start == e.getSource() ){
 			System.out.println("Start");
 			String response="";
-			response = "Nothing";
+			response = "Board Loaded";
+			try {
+				int[][] response_board = stub.get_Board_server();
+				for(int i =0; i <3; i++){
+					for(int j =0; j <3; j++){
+						if(response_board[i][j] == 1)
+							buttons[i][j].setIcon(iconX);
+						else if(response_board[i][j] == 2)
+							buttons[i][j].setIcon(iconO);
+					}		
+				}
+			} catch (RemoteException | ServerNotActiveException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			JOptionPane.showMessageDialog(null, response);
 			
 		}
@@ -77,25 +108,27 @@ public class GUI extends JFrame implements ActionListener{
 				}		
 			}
 			try {
-				stub.client_move(y, x, 1);
-				buttons[y][x].setText("X");
-				buttons[y][x].setEnabled(false);
-				if(stub.winner(y, x, 1))
+				if(stub.client_move(y, x, 1))
 				{
-					show_winner(1);
-					reset_game();
-				}
-				int move = stub.server_move();
-				x= move/10;
-				y= (move-(x*10))%3;
-				System.out.println(move + " "+x +" "+y);
-				buttons[y][x].setText("O");
-				buttons[y][x].setEnabled(false);
-				if(stub.winner(y, x, 2))
-				{
-					show_winner(2);
-					reset_game();
-				}
+					buttons[y][x].setIcon(iconX);
+					//buttons[y][x].setEnabled(false);
+					if(stub.winner(y, x, 1))
+					{
+						show_winner(1);
+						reset_game();
+					}
+					int move = stub.server_move();
+					x= move/10;
+					y= (move-(x*10))%3;
+					System.out.println(move + " "+x +" "+y);
+					buttons[y][x].setIcon(iconO);
+					//buttons[y][x].setEnabled(false);
+					if(stub.winner(y, x, 2))
+					{
+						show_winner(2);
+						reset_game();
+					}					
+				}	
 			} catch (RemoteException | ServerNotActiveException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -114,7 +147,7 @@ public class GUI extends JFrame implements ActionListener{
 	public void reset_game(){
 		for(int i =0; i <3; i++){
 			for(int j =0; j <3; j++){
-				buttons[i][j].setText("");
+				buttons[i][j].setIcon(null);
 				buttons[i][j].setEnabled(true);
 			}
 		}

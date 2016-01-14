@@ -1,5 +1,6 @@
 package game.server;
 
+
 public class Board {
 	private int my_board[][];
 	private int size_h;
@@ -54,5 +55,11 @@ public class Board {
 	
 	public int getSize_V(){
 		return size_v;
-	}	
+	}
+	
+	public int[][] getBoard(){
+		return this.my_board;
+	}
+	
+	
 }

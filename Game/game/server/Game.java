@@ -66,6 +66,10 @@ public class Game {
 	public void show_board(){
 		my_Board.printBoard();
 	}
+	
+	public int[][] game_getBoard(){
+		return my_Board.getBoard();
+	}
 	/*public static void main(String [] args) throws NumberFormatException, IOException
 	{
 		boolean no_end = true;

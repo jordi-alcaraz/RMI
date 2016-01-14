@@ -31,8 +31,19 @@ public class Server implements Hello {
     	return current_games.get(RemoteServer.getClientHost()).new_move();
     }
     
-    public boolean client_move(int row, int col, int player) throws ServerNotActiveException{
-    	return current_games.get(RemoteServer.getClientHost()).check_move(row, col, player);
+    public int[][] get_Board_server() throws ServerNotActiveException{
+    	return current_games.get(RemoteServer.getClientHost()).game_getBoard();
+    }
+    
+    public boolean client_move(int row, int col, int player){
+    	boolean valid = false;
+    	try {
+    		valid = current_games.get(RemoteServer.getClientHost()).check_move(row, col, player);
+		} catch (ServerNotActiveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return valid;
     }
     
     public boolean connect(){
@@ -92,7 +103,6 @@ public class Server implements Hello {
         }
     	return response;
     }
-    
 
 
     public static void main(String args[]) {
