@@ -11,10 +11,13 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+//Allows the user to input the IP the server will use
 public class Init_ip {
+	//Map of ip's
 	private HashMap<String,String> ip_map = new HashMap<String,String>();
+	//Empty initializer
 	public Init_ip() {}
-	
+	//Display all the interfaces 
     private void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
         System.out.printf("Interface: %s  ", netint.getName());
         Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
@@ -27,7 +30,7 @@ public class Init_ip {
         }
      }
 	
-	
+	//Gets the IP from the selected Interface
 	public String getIP(){
 		try {
 			Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();

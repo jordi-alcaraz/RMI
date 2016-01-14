@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 
+//Our game class
 public class Game {
+	//Create a Board for our Game
 	private Board my_Board = new Board(3, 3, 0);
-	
+	//Checks if the move is valid or not
 	public boolean check_move(int row, int col, int player){
 		if(my_Board.getElement(col, row)==0)
 		{
@@ -16,9 +18,12 @@ public class Game {
 		return false;
 	}
 	
+	//Checks if the player wins with the new move
 	public boolean check_winner(int row, int col, int player){
+		//Counter that checks if the value 3 is reached
+		//because if it is reached, the player wins
 		int count=0;
-		//check row
+		//Check by row
 		for(int i=0; i<my_Board.getSize_H(); i++)
 		{
 			if(player==my_Board.getElement(i, row))
@@ -26,16 +31,16 @@ public class Game {
 		}
 		if(count ==3)
 			return true;
-		//check col
+		//Check by col,
 		count = 0;
 		for(int i=0; i<my_Board.getSize_V(); i++)
 		{
 			if(player==my_Board.getElement(col, i))
 				count++;
 		}
-		if(count ==3)
+		if(count == 3)
 			return true;
-		//check diagonal
+		//Check by diagonal
 		if(col==row){
 			count = 0;
 			for(int i=0; i<my_Board.getSize_H(); i++)
@@ -49,8 +54,10 @@ public class Game {
 		return false;
 	}
 	
+	//New move by the server
 	public int new_move(){
 		int move=-1;
+		//Try random moves until one is valid
 		while(move==-1){
 			Random ran = new Random();
 			int x = ran.nextInt(3);
@@ -63,42 +70,13 @@ public class Game {
 		return move;
 	}
 	
+	//Shows the board calling the print function of the board
 	public void show_board(){
 		my_Board.printBoard();
 	}
 	
+	//Gets the board
 	public int[][] game_getBoard(){
 		return my_Board.getBoard();
 	}
-	/*public static void main(String [] args) throws NumberFormatException, IOException
-	{
-		boolean no_end = true;
-		int x, y;
-		Game Test_game = new Game();
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		while(no_end){
-			do{
-				System.out.println("Put x");
-				x = Integer.parseInt(br.readLine());
-				System.out.println("Put y");
-				y = Integer.parseInt(br.readLine());
-				System.out.println(x +" " +y);
-			}while(!Test_game.check_move(y, x, 1));
-			no_end = !Test_game.check_winner(y, x, 1);
-			if(no_end)
-			{
-				System.out.println( Test_game.new_move());
-				no_end = !Test_game.check_winner(y, x, 1);
-				Test_game.my_Board.printBoard();
-				if(!no_end)
-					System.out.println("Wins O");
-			}
-			else
-			{
-				Test_game.my_Board.printBoard();
-				System.out.println("Wins X");
-				
-			}	
-		}
-	}*/
 }
