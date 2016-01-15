@@ -50,7 +50,16 @@ public class Game {
 			}
 			if(count ==3)
 				return true;
-		}		
+		}
+		//Check by anti-diagonal 
+		count = 0;
+		for(int i=0; i<my_Board.getSize_H(); i++)
+		{
+			if(player==my_Board.getElement(i, 2-i))
+				count++;
+		}
+		if(count ==3)
+			return true;
 		return false;
 	}
 	

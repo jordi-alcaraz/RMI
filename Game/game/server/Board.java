@@ -54,7 +54,6 @@ public class Board {
 			my_board[row][col] = set_to;
 		return true;
 	}
-	
 	//Gets the number of columns
 	public int getSize_H(){
 		return size_h;

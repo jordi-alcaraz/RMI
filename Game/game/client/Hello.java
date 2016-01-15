@@ -7,9 +7,9 @@ import java.rmi.server.ServerNotActiveException;
 
 //Functions that can be called by the client
 public interface Hello extends Remote {
-	//Safely closes the server
-	public String disconnect( ) throws RemoteException;
-	//Connect to the server
+  //Safely closes the server
+  public String disconnect( ) throws RemoteException;
+  //Connect to the server
   public boolean connect() throws RemoteException;
   //Restart the game
   public boolean reset() throws RemoteException;

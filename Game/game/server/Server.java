@@ -20,7 +20,7 @@ public class Server implements Hello {
 	private static Hello stub;
 	//Server initializer
     public Server() {}
-    //Game of each client, used as sesion
+    //Game of each client, used as session
     private HashMap<String,Game> current_games = new HashMap<String,Game>();
 
     //Returns true if the move allows the player to win
